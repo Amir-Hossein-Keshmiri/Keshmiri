@@ -11,8 +11,6 @@ clear
 ![Operating system execution image](Keshmiri.png)
 
 
-## Video of running my operating system on a laptop
-[video](https://www.youtube.com/watch?v=SRd5JuF0wTA)
 
 
 ## Download

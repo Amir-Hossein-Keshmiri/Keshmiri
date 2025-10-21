@@ -1,13 +1,42 @@
 [bits 16]
 [org 0x7c00]
 
- print_character:
-    mov ah, 0x0e
-    mov al, 'A'
-    int 0x10
+real_mode_entry:
+
+    cli
+
+    xor ax, ax
+
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+
+    mov sp, 0x7c00
+
+    sti
+
+print_string:
+
+    mov si, message
+
+    .next_character:
+
+        lodsb
+
+        cmp al, 0x00
+        jz end
+
+        mov ah, 0x0e
+        int 0x10
+
+        jmp .next_character
 
 end:
+    cli
+    hlt
     jmp end
+
+message: db "Hello, World!", 0x00
 
 times (0x01fe - ($ - $$)) db 0x00
 

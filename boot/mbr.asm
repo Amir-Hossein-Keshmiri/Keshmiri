@@ -1,6 +1,7 @@
 [bits 16]
 [org 0x7c00]
 
+
 real_mode_entry:
 
     cli
@@ -15,30 +16,38 @@ real_mode_entry:
 
     sti
 
-print_string:
 
-    mov si, message
+load_loader:
 
-    .next_character:
+    mov word[si + 0x00], 0x10
+    mov word[si + 0x02], 0x05
+    mov word[si + 0x04], 0x7e00
+    mov word[si + 0x06], 0x00
 
-        lodsb
+    mov dword[si + 0x08], 0x01
+    mov dword[si + 0x0c], 0x00
 
-        cmp al, 0x00
-        jz end
+    mov ah, 0x42
+    int 0x13
 
-        mov ah, 0x0e
-        int 0x10
-
-        jmp .next_character
+    jmp 0x7e00
 
 end:
     cli
     hlt
     jmp end
 
-message: db "Hello, World!", 0x00
+times (0x01be - ($ - $$)) db 0x00
 
-times (0x01fe - ($ - $$)) db 0x00
+db 0x80
+db 0x00, 0x02, 0x00
+db 0xf0
+db 0xff, 0xff, 0xff
+
+dd 0x01
+dd ((0x14 * 0x10 * 0x3f) - 0x01)
+	
+times (0x10 * 0x03) db 0x00
 
 db 0x55
 db 0xaa

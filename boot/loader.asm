@@ -1,0 +1,28 @@
+[bits 16]
+[org 0x7e00]
+
+
+load_kernel:
+
+    mov word[si + 0x00], 0x10
+    mov word[si + 0x02], 0x64
+    mov word[si + 0x04], 0x00
+    mov word[si + 0x06], 0x1000
+
+    mov dword[si + 0x08], 0x06
+    mov dword[si + 0x0c], 0x00
+
+    mov ah, 0x42
+    int 0x13
+
+
+set_text_mode:
+
+    mov ax, 0x03
+    int 0x10
+
+
+end:
+    cli
+    hlt
+    jmp end

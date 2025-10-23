@@ -1,9 +1,9 @@
 section .text
 
 extern main
-global start
+global _start
 
-start:
+_start:
     call main
 
 end:

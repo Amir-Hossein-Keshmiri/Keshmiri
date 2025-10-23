@@ -22,32 +22,32 @@ GCC_FLAGES			:= -ffreestanding -nostdlib -m64 -c -Wall
 KERNEL_ENTRY_ASM 	:= kernel_entry.asm
 KERNEL_ENTRY_O 		:= kernel_entry.o
 
-KERNEL_C			:= kernel.c
-KERNEL_O			:= kernel.o
+FINAL_C				:= final.c
+FINAL_O				:= final.o
 
-KERNEL_ELF			:= kernel.elf
+FINAL_ELF			:= final.elf
 
-KERNEL_BIN			:= kernel.bin
+FINAL_BIN			:= final.bin
 
 # ----------------------------------------
 # Rules
 # ----------------------------------------
 
-all: $(KERNEL_BIN)
+all: $(FINAL_BIN)
 
 $(KERNEL_ENTRY_O): $(KERNEL_ENTRY_ASM)
 	$(NASM) -f elf64 			$< -o $@
 
-$(KERNEL_O): $(KERNEL_C)
+$(FINALEL_O): $(KERNEL_C)
 	$(GCC) 	$(GCC_FLAGES) 	 	$< -o $@
 
-$(KERNEL_ELF): $(KERNEL_ENTRY_O) $(KERNEL_O)
+$(FINAL_ELF): $(KERNEL_ENTRY_O) $(FINAL_O)
 	$(LD) 	$(LD_FLAGES) 		$^ -o $@
 
-$(KERNEL_BIN): $(KERNEL_ELF)
+$(FINAL_BIN): $(FINAL_ELF)
 	$(OBJCOPY) 					$< -O binary $@
 
 clean:
-	rm 	-f 	$(KERNEL_ENTRY_O) $(KERNEL_O) $(KERNEL_ELF) $(KERNEL_BIN)
+	rm 	-f 	$(KERNEL_ENTRY_O) $(FINAL_O) $(FINAL_ELF) $(FINAL_BIN)
 
 .PHONY: all clean

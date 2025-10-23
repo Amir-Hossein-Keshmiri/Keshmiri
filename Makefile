@@ -17,7 +17,7 @@ SRC_KERNEL			:= kernel
 # ----------------------------------------
 
 BOOT_BIN			:= $(SRC_BOOT)/boot.bin
-KERNEL_BIN			:= $(SRC_KERNEL)/kernel.bin
+FINAL_BIN			:= $(SRC_KERNEL)/final.bin
 
 IMG 				:= keshmiri.img
 
@@ -30,13 +30,13 @@ all: $(IMG)
 $(BOOT_BIN):
 	$(MAKE) -C $(SRC_BOOT)
 
-$(KERNEL_BIN):
+$(FINAL_BIN):
 	$(MAKE) -C $(SRC_KERNEL)
 
-$(IMG): $(BOOT_BIN) $(KERNEL_BIN)
+$(IMG): $(BOOT_BIN) $(FINAL_BIN)
 	$(DD) if=/dev/zero 		of=$(IMG) bs=512 count=110
 	$(DD) if=$(BOOT_BIN) 	of=$(IMG) bs=512 count=6 	conv=notrunc
-	$(DD) if=$(KERNEL_BIN) 	of=$(IMG) bs=512 count=100 	conv=notrunc seek=6
+	$(DD) if=$(FINAL_BIN) 	of=$(IMG) bs=512 count=100 	conv=notrunc seek=6
 
 run:
 	$(QEMU) -hda $(IMG)

@@ -11,8 +11,8 @@ OBJCOPY				:= objcopy
 # Flags
 # ----------------------------------------
 
-LD_FLAGES			:= -Ttext=0x200000
-GCC_FLAGES			:= -ffreestanding -nostdlib -m64 -c -Wall
+LD_FLAGS			:= -Ttext=0x200000
+GCC_CFLAGS 			:= -ffreestanding -nostdlib -m64 -fno-stack-protector -fno-pie -no-pie -Wall -c
 
 # ----------------------------------------
 # Files
@@ -38,11 +38,11 @@ all: $(FINAL_BIN)
 $(KERNEL_ENTRY_O): $(KERNEL_ENTRY_ASM)
 	$(NASM) -f elf64 			$< -o $@
 
-$(FINALEL_O): $(KERNEL_C)
-	$(GCC) 	$(GCC_FLAGES) 	 	$< -o $@
+$(FINAL_O): $(FINAL_C)
+	$(GCC) 	$(GCC_CFLAGS) 	 	$< -o $@
 
 $(FINAL_ELF): $(KERNEL_ENTRY_O) $(FINAL_O)
-	$(LD) 	$(LD_FLAGES) 		$^ -o $@
+	$(LD) 	$(LD_FLAGS) 		$^ -o $@
 
 $(FINAL_BIN): $(FINAL_ELF)
 	$(OBJCOPY) 					$< -O binary $@

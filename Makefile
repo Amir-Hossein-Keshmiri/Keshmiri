@@ -39,7 +39,7 @@ $(IMG): $(BOOT_BIN) $(FINAL_BIN)
 	$(DD) if=$(FINAL_BIN) 	of=$(IMG) bs=512 count=100 	conv=notrunc seek=6
 
 run:
-	$(QEMU) -hda $(IMG)
+	$(QEMU) -drive format=raw,file=$(IMG) -display sdl,gl=on
 
 clean:
 	$(MAKE) -C $(SRC_BOOT) clean

@@ -1,45 +1,49 @@
 # Keshmiri Operation System
 
-Keshmiri is a simple operating system for the x86_64 architecture, currently in early development stages. It boots with BIOS and can control screen characters in text mode.
+Keshmiri is a lightweight 64-bit operating system built from scratch for the x86_64 architecture.
+It boots via BIOS and includes a basic command-line interface with the following built-in commands:
 
-## About this commit
+### Supported Commands
+- uname
+- echo &lt;TEXT&gt;
+- clear
 
-Now my operating system boots successfully and displays characters on the screen.
+### 🖼️ Screenshot
+A snapshot of the operating system running in QEMU:
+![Operating system execution image](tools/image.png)
 
-![Operating system execution image](images/image.png)
+### 🎦 Demo Video
+Watch the OS boot and run commands:
+![Operating system execution video](tools/video.webp)
 
-## Download
+
+## ⬇️ Download
 
 ```bash
 git clone https://github.com/Amir-Hossein-Keshmiri/Keshmiri.git
 ```
 
-## Update
+## 🧩 Installation
 
 ```bash
-sudo apt update 
-```
-
-## Install
-
-```bash
+sudo apt update
 sudo apt install dd ld nasm objcopy qemu-system-x86_64 gcc
 ```
 
-## Build
+## ⚙️ Build and Run
 
 ```bash
 make
-```
-
-## Run
-
-```bash
 make run
 ```
 
-## Clean
+## 🧹 Clean
 
 ```bash
 make clean
 ```
+
+## 🚀 Planned Features
+- File system support  
+- Simple multitasking   
+- Basic memory management

@@ -61,7 +61,7 @@ void print_character(uint8_t character, uint8_t color_character)
 }
 
 
-void print_string(const uint8_t *string, uint8_t text_color)
+void print_string(const char *string, uint8_t text_color)
 {
     uint32_t index = 0;
 
@@ -92,4 +92,128 @@ void move_cursor_to_new_line()
     uint32_t cursor = get_cursor();
 
     set_cursor((cursor / (SCREEN_WIDTH * 2) + 1) * (SCREEN_WIDTH * 2));
+}
+
+bool run_command()
+{
+    uint8_t command[COMMAND_SIZE];
+
+    for (uint32_t i = 0; i < COMMAND_SIZE; i += 1)
+    {
+        command[i] = *(video_memory + starting_point_of_command + (i * 2));
+    }
+
+    return process_shell(command);
+}
+
+
+void shift_screen_to_up(int number)
+{
+    uint32_t cursor = get_cursor();
+
+    for (uint32_t i = (2 * SCREEN_WIDTH); i < ((2 * SCREEN_WIDTH) * (number + 2)); i += 2)
+    {
+        if (number + 2 >= SCREEN_HEIGHT)
+        {
+            *(video_memory + i) = 0x00;
+        }
+        else
+        {
+            *(video_memory + i - (2 * SCREEN_WIDTH)) = *(video_memory + i);
+            *(video_memory + i - (2 * SCREEN_WIDTH) + 1) = *(video_memory + i + 1);
+        }
+    }
+
+    set_cursor(cursor - (2 * SCREEN_WIDTH));
+}
+
+
+void enter()
+{
+    run_command();
+}
+
+void  backspace()
+{
+    uint32_t cursor = get_cursor();
+
+    uint32_t cursor_column = get_cursor_column();
+
+    if (cursor_column > (OPERATION_SYSTEM_NAME_SIZE * 2))
+    {
+        *(video_memory + cursor - 2) = 0x00;
+    
+        set_cursor(cursor - 2);
+    }
+}
+
+void show_zero_one()
+{
+    clear_screen();
+
+    for (uint32_t i = 0; i < SCREEN_HEIGHT; i++)
+    {
+        for (uint32_t j = 0; j < SCREEN_WIDTH; j++)
+        {
+            if (array_zero_one[i][j] == 1)
+            {
+                uint32_t rand = random();
+
+                rand = max_min(10000, 0, rand);
+
+                if (rand % 2 == 0)
+                {
+                    print_character('0', TEXT_COLOR_LIGHT_GREEN);
+                }
+                
+                if (rand % 2 == 1)
+                {
+                    print_character('1', TEXT_COLOR_LIGHT_GREEN);
+                }
+            }
+            else
+            {
+                print_character(' ', TEXT_COLOR_LIGHT_GREEN);
+            }
+        }
+    }
+}
+
+void screen_start()
+{
+    for (uint32_t i = 0; i < SCREEN_HEIGHT; i++)
+    {
+        uint32_t rand_1 = random();
+
+        rand_1 = max_min(10000, 0, rand_1);
+
+        for (uint32_t j = 0; j < (rand_1 % 10); j++)
+        {
+            uint32_t rand_2 = random();
+
+            rand_2 = max_min(10000, 0, rand_2);
+
+            if (array_zero_one[0][rand_2 % SCREEN_WIDTH] == 0)
+            {
+                array_zero_one[0][rand_2 % SCREEN_WIDTH] = 1;
+            }
+        }
+
+        for (int32_t j = line_zero_one; j >= 0; j--)
+        {
+            for (int32_t k = 0; k < SCREEN_WIDTH; k++)
+            {
+                if (array_zero_one[j][k] == 1)
+                {
+                    array_zero_one[j + 1][k] = 1;
+                }
+            }
+        }
+
+        for (uint32_t j = 0; j < 100000; j++) {}
+
+        line_zero_one += 1;
+
+        show_zero_one();
+    }
 }
